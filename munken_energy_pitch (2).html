@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Munken Energy — Seed Round</title>
+<style>
+  :root{
+    --bg: #0A1524;
+    --bg-deep: #060D18;
+    --card: #101F35;
+    --card-2: #142943;
+    --line: rgba(212,167,84,0.16);
+    --gold: #D8AE5B;
+    --gold-soft: #B8935A;
+    --text: #EDEFF3;
+    --muted: #93A1B5;
+    --green: #3E9C77;
+    --green-dim: rgba(62,156,119,0.14);
+    --red: #E0637A;
+    --red-dim: rgba(224,99,122,0.12);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    overflow-x:hidden;
+  }
+  @font-face{
+    font-family:'Fraunces';
+    src:local('Georgia');
+  }
+  h1,h2,h3,.display{
+    font-family: Georgia, 'Times New Roman', serif;
+    font-weight: 600;
+    letter-spacing:-0.01em;
+  }
+  .eyebrow{
+    text-transform:uppercase;
+    letter-spacing:0.18em;
+    font-size:0.72rem;
+    color:var(--gold);
+    font-weight:600;
+  }
+  /* Top nav */
+  .topbar{
+    position:fixed; top:0; left:0; right:0; z-index:100;
+    display:flex; align-items:center; justify-content:space-between;
+    padding: 18px 5vw;
+    background:linear-gradient(180deg, rgba(6,13,24,0.92), rgba(6,13,24,0));
+    backdrop-filter: blur(2px);
+  }
+  .brand{
+    display:flex; align-items:baseline; gap:10px;
+    font-size:0.95rem; letter-spacing:0.14em; font-weight:700;
+  }
+  .brand .dot{color:var(--gold);}
+  .brand-sub{
+    font-size:0.62rem; letter-spacing:0.2em; color:var(--muted); font-weight:500;
+  }
+  .nav-dots{
+    display:flex; gap:9px;
+  }
+  .nav-dots button{
+    width:8px; height:8px; border-radius:50%;
+    border:1px solid var(--gold-soft);
+    background:transparent; cursor:pointer;
+    padding:0; transition: all .25s ease;
+  }
+  .nav-dots button.active{ background:var(--gold); width:22px; border-radius:5px;}
+
+  section{
+    min-height:100vh;
+    display:flex; flex-direction:column; justify-content:center;
+    padding: 110px 8vw 90px;
+    position:relative;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+  .kicker-row{
+    display:flex; align-items:center; gap:14px; margin-bottom:22px;
+  }
+  .slide-index{
+    font-size:0.7rem; color:var(--muted); letter-spacing:0.1em;
+  }
+  .fade-up{
+    opacity:0; transform: translateY(28px);
+    transition: opacity .8s ease, transform .8s ease;
+  }
+  .fade-up.in{opacity:1; transform:translateY(0);}
+
+  /* HERO */
+  #hero{
+    background:
+      radial-gradient(ellipse 900px 600px at 85% 15%, rgba(216,174,91,0.10), transparent 60%),
+      radial-gradient(ellipse 700px 500px at 10% 90%, rgba(62,156,119,0.08), transparent 60%),
+      var(--bg-deep);
+  }
+  #hero .headline{
+    font-size:clamp(2.4rem, 6vw, 4.6rem);
+    line-height:1.04;
+    max-width:820px;
+    margin: 18px 0 22px;
+  }
+  #hero .sub{
+    font-size:1.05rem; color:var(--muted); max-width:560px; line-height:1.6;
+    margin-bottom:44px;
+  }
+  .stat-row{ display:flex; gap:18px; flex-wrap:wrap; }
+  .stat-pill{
+    border:1px solid var(--line);
+    background:var(--card);
+    border-radius:14px;
+    padding:20px 26px;
+    min-width:150px;
+  }
+  .stat-pill .num{ font-family:Georgia,serif; font-size:2rem; color:var(--gold); }
+  .stat-pill .lbl{ font-size:0.75rem; color:var(--muted); margin-top:4px; letter-spacing:0.03em;}
+
+  h2.title{ font-size:clamp(1.8rem,3.4vw,2.6rem); margin-bottom:10px; }
+  .lede{ color:var(--muted); font-size:1.05rem; max-width:640px; margin-bottom:48px; line-height:1.6;}
+
+  /* Card grids */
+  .grid3{ display:grid; grid-template-columns:repeat(3,1fr); gap:22px; }
+  .grid2{ display:grid; grid-template-columns:repeat(2,1fr); gap:22px; }
+  @media(max-width:860px){ .grid3{grid-template-columns:1fr;} .grid2{grid-template-columns:1fr;} }
+
+  .card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:30px 26px;
+  }
+  .icon-circle{
+    width:46px; height:46px; border-radius:50%;
+    background:var(--card-2);
+    display:flex; align-items:center; justify-content:center;
+    margin-bottom:18px;
+    color:var(--gold);
+  }
+  .icon-circle svg{ width:22px; height:22px; stroke:var(--gold); fill:none; stroke-width:1.7; }
+  .card h3{ font-size:1.08rem; margin-bottom:10px; font-family: -apple-system, Inter, sans-serif; font-weight:600;}
+  .card p{ color:var(--muted); font-size:0.92rem; line-height:1.55; }
+
+  .callout{
+    margin-top:40px;
+    background:var(--red-dim);
+    border:1px solid rgba(224,99,122,0.28);
+    border-radius:16px;
+    padding:26px 30px;
+    display:flex; align-items:center; gap:26px;
+  }
+  .callout .big{ font-family:Georgia,serif; font-size:3rem; color:var(--red); line-height:1; }
+  .callout .txt{ color:var(--text); font-size:0.98rem; max-width:420px; }
+
+  /* Slide 4 without/with */
+  .compare-wrap{ display:grid; grid-template-columns:1fr 1fr; gap:22px; margin-bottom:26px;}
+  @media(max-width:860px){ .compare-wrap{grid-template-columns:1fr;} }
+  .compare-card{ border-radius:16px; padding:28px; border:1px solid var(--line); }
+  .compare-card.bad{ background: rgba(224,99,122,0.06); }
+  .compare-card.good{ background: var(--green-dim); }
+  .compare-head{ display:flex; align-items:center; gap:10px; font-weight:700; margin-bottom:18px; letter-spacing:0.03em; font-size:0.85rem; text-transform:uppercase;}
+  .compare-card.bad .compare-head{ color:var(--red); }
+  .compare-card.good .compare-head{ color:var(--green); }
+  .compare-card ul{ list-style:none; }
+  .compare-card li{ display:flex; gap:10px; padding:8px 0; color:var(--muted); font-size:0.93rem; line-height:1.45; }
+  .compare-card li svg{ flex-shrink:0; width:16px; height:16px; margin-top:3px; }
+  .compare-card.bad li svg{ stroke:var(--red);}
+  .compare-card.good li svg{ stroke:var(--green);}
+  .banner{
+    background: var(--green-dim); border:1px solid rgba(62,156,119,0.3);
+    border-radius:14px; padding:18px 26px; color:var(--text); font-size:0.98rem; text-align:center;
+  }
+  .banner b{ color:var(--green); }
+
+  /* market segments */
+  .seg-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:18px; margin-bottom:40px;}
+  @media(max-width:860px){ .seg-grid{grid-template-columns:1fr 1fr;} }
+  .seg-card{
+    background:var(--card); border:1px solid var(--line); border-radius:14px;
+    padding:22px 18px; display:flex; align-items:center; gap:14px;
+  }
+  .seg-card .icon-circle{ margin:0; width:40px; height:40px; flex-shrink:0;}
+  .seg-card span{ font-size:0.92rem; font-weight:500; }
+
+  /* business model */
+  .two-col-head{ display:flex; align-items:center; gap:10px; margin-bottom:20px; }
+  .two-col-head .icon-circle{ margin:0; }
+  .two-col-head h3{ font-size:1rem; text-transform:uppercase; letter-spacing:0.08em; font-weight:700; color:var(--gold);}
+  .flow-item{ padding:16px 0; border-top:1px solid var(--line); }
+  .flow-item:first-of-type{ border-top:none; }
+  .flow-item b{ color:var(--text); font-size:0.95rem; }
+  .flow-item p{ color:var(--muted); font-size:0.87rem; margin-top:4px; line-height:1.5;}
+
+  /* use of funds */
+  .bars{ margin-bottom:46px; }
+  .bar-row{ margin-bottom:20px; }
+  .bar-label{ display:flex; justify-content:space-between; font-size:0.9rem; margin-bottom:8px; color:var(--text); }
+  .bar-track{ height:10px; border-radius:6px; background:var(--card-2); overflow:hidden; }
+  .bar-fill{ height:100%; border-radius:6px; width:0%; transition:width 1.2s cubic-bezier(.2,.8,.2,1); }
+  .impact-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:16px; }
+  @media(max-width:860px){ .impact-grid{grid-template-columns:1fr 1fr;} }
+  .impact-card{ background:var(--card); border:1px solid var(--line); border-radius:12px; padding:20px; text-align:center;}
+  .impact-card .num{ font-family:Georgia,serif; font-size:1.9rem; color:var(--gold);}
+  .impact-card .lbl{ color:var(--muted); font-size:0.78rem; margin-top:4px;}
+
+  /* contact */
+  #contact{ background: radial-gradient(ellipse 900px 500px at 20% 20%, rgba(216,174,91,0.08), transparent 60%), var(--bg-deep); }
+  .contact-wrap{ display:grid; grid-template-columns:1.1fr 1fr; gap:60px; align-items:center;}
+  @media(max-width:860px){ .contact-wrap{grid-template-columns:1fr; gap:40px;} }
+  .contact-card{ background:var(--card); border:1px solid var(--line); border-radius:18px; padding:34px; }
+  .cinfo-row{ display:flex; gap:16px; padding:16px 0; border-top:1px solid var(--line); }
+  .cinfo-row:first-child{ border-top:none; padding-top:0;}
+  .cinfo-row .icon-circle{ margin:0; flex-shrink:0; width:38px; height:38px;}
+  .cinfo-label{ font-size:0.7rem; letter-spacing:0.1em; color:var(--muted); text-transform:uppercase; margin-bottom:3px;}
+  .cinfo-val{ font-size:0.96rem; color:var(--text); }
+  .cinfo-val a{ color:var(--text); text-decoration:none; }
+  .cinfo-val a:hover{ color:var(--gold); }
+
+  footer{
+    text-align:center; padding:34px; color:var(--muted); font-size:0.78rem;
+    background:var(--bg-deep);
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">MUNKEN <span class="dot">•</span> ENERGY <span class="brand-sub">&nbsp;&nbsp;SEED ROUND</span></div>
+  <div class="nav-dots" id="navDots"></div>
+</div>
+
+<!-- 1. HERO -->
+<section id="hero">
+  <div class="fade-up eyebrow">Investment Opportunity · 1/8</div>
+  <h1 class="fade-up headline">Powering Kenya's Future</h1>
+  <p class="fade-up sub">Decentralized solar infrastructure for the 85% of rural Kenya living without reliable electricity.</p>
+  <div class="fade-up stat-row">
+    <div class="stat-pill"><div class="num">6</div><div class="lbl">Target Segments</div></div>
+    <div class="stat-pill"><div class="num">24/7</div><div class="lbl">Power Delivery</div></div>
+  </div>
+</section>
+
+<!-- 2. PROBLEM -->
+<section id="problem">
+  <div class="fade-up eyebrow">The Problem · 2/8</div>
+  <h2 class="fade-up title">Energy poverty is blocking Kenya's development</h2>
+  <div class="fade-up grid3">
+    <div class="card">
+      <div class="icon-circle"><svg viewBox="0 0 24 24"><path d="M12 3l9 4-9 4-9-4 9-4z"/><path d="M3 11l9 4 9-4"/><path d="M3 15l9 4 9-4"/></svg></div>
+      <h3>Schools</h3>
+      <p>Students study by candlelight. Digital learning is impossible without computers and lighting.</p>
+    </div>
+    <div class="card">
+      <div class="icon-circle"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 00-7.8 0L12 5.6l-1-1a5.5 5.5 0 10-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 000-7.8z"/></svg></div>
+      <h3>Health Clinics</h3>
+      <p>Preventable deaths from lack of vaccine refrigeration and emergency medical equipment.</p>
+    </div>
+    <div class="card">
+      <div class="icon-circle"><svg viewBox="0 0 24 24"><path d="M12 22V12"/><path d="M12 12C12 6 8 3 3 3c0 6 3 9 9 9z"/><path d="M12 12c0-6 4-9 9-9 0 6-3 9-9 9z"/></svg></div>
+      <h3>Agriculture</h3>
+      <p>40% of harvests lost to spoilage without cold-chain storage and irrigation.</p>
+    </div>
+  </div>
+  <div class="fade-up callout">
+    <div class="big">85%</div>
+    <div class="txt">of rural Kenya lacks reliable power — leaving schools, clinics, and farms without the electricity they need to function.</div>
+  </div>
+</section>
+
+<!-- 3. SOLUTION -->
+<section id="solution">
+  <div class="fade-up eyebrow">The Solution · 3/8</div>
+  <h2 class="fade-up title">Decentralized solar infrastructure built for rural Kenya</h2>
+  <div class="fade-up grid3">
+    <div class="card">
+      <div class="icon-circle"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></div>
+      <h3>Solar PV</h3>
+      <p>Grid-tied and off-grid photovoltaic systems with remote monitoring for real-time performance.</p>
+    </div>
+    <div class="card">
+      <div class="icon-circle"><svg viewBox="0 0 24 24"><path d="M12 2c3 4 6 7.5 6 11a6 6 0 01-12 0c0-3.5 3-7 6-11z"/></svg></div>
+      <h3>Solar Water Heating</h3>
+      <p>Replaces electric geysers and LPG boilers with clean, free thermal energy from the sun.</p>
+    </div>
+    <div class="card">
+      <div class="icon-circle"><svg viewBox="0 0 24 24"><rect x="6" y="7" width="11" height="12" rx="1.5"/><path d="M9 4h5v3H9z"/><path d="M11 10l-2 4h3l-1 3 3-4h-2z" fill="var(--gold)" stroke="none"/></svg></div>
+      <h3>Battery Storage (BESS)</h3>
+      <p>Enables 24/7 power, outage backup, and grid stabilization for weak rural lines.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 4. WHY BESS -->
+<section id="bess">
+  <div class="fade-up eyebrow">Why It Matters · 4/8</div>
+  <h2 class="fade-up title">Why Battery Storage Is the Game-Changer</h2>
+  <p class="fade-up lede" style="margin-bottom:34px;">Solar alone isn't enough. BESS makes it dependable.</p>
+  <div class="fade-up compare-wrap">
+    <div class="compare-card bad">
+      <div class="compare-head"><svg width="18" height="18" viewBox="0 0 24 24" stroke="var(--red)" fill="none" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg> Without BESS</div>
+      <ul>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg>Exposed at night and during outages</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg>Intermittent power = unreliable operations</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg>High diesel generator dependency</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg>Limited commercial viability</li>
+      </ul>
+    </div>
+    <div class="compare-card good">
+      <div class="compare-head"><svg width="18" height="18" viewBox="0 0 24 24" stroke="var(--green)" fill="none" stroke-width="2"><path d="M4 12l5 5L20 6"/></svg> With BESS</div>
+      <ul>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M4 12l5 5L20 6"/></svg>Dependable 24/7 power system</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M4 12l5 5L20 6"/></svg>Peak-shaving for commercial customers</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M4 12l5 5L20 6"/></svg>Grid stabilization for weak rural lines</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M4 12l5 5L20 6"/></svg>Full energy independence</li>
+      </ul>
+    </div>
+  </div>
+  <div class="fade-up banner"><b>BESS</b> turns solar from a daytime luxury into a round-the-clock utility.</div>
+</section>
+
+<!-- 5. MARKET -->
+<section id="market">
+  <div class="fade-up eyebrow">Market Opportunity · 5/8</div>
+  <h2 class="fade-up title">Six segments of paying customers across rural Kenya</h2>
+  <div class="fade-up seg-grid" style="margin-top:36px;">
+    <div class="seg-card"><div class="icon-circle"><svg viewBox="0 0 24 24"><path d="M3 21V9l9-6 9 6v12"/><path d="M9 21v-6h6v6"/></svg></div><span>Hospitality &amp; Eco-Lodges</span></div>
+    <div class="seg-card"><div class="icon-circle"><svg viewBox="0 0 24 24"><path d="M12 3l9 4-9 4-9-4 9-4z"/><path d="M3 11l9 4 9-4"/><path d="M3 15l9 4 9-4"/></svg></div><span>Schools &amp; Boarding Facilities</span></div>
+    <div class="seg-card"><div class="icon-circle"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 00-7.8 0L12 5.6l-1-1a5.5 5.5 0 10-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 000-7.8z"/></svg></div><span>Health Clinics &amp; Vaccine Programs</span></div>
+    <div class="seg-card"><div class="icon-circle"><svg viewBox="0 0 24 24"><path d="M12 22V12"/><path d="M12 12C12 6 8 3 3 3c0 6 3 9 9 9z"/><path d="M12 12c0-6 4-9 9-9 0 6-3 9-9 9z"/></svg></div><span>Agri-Cooperatives &amp; Cold Storage</span></div>
+    <div class="seg-card"><div class="icon-circle"><svg viewBox="0 0 24 24"><rect x="4" y="9" width="16" height="11" rx="1"/><path d="M8 9V6a4 4 0 018 0v3"/></svg></div><span>Commercial Businesses &amp; SMEs</span></div>
+    <div class="seg-card"><div class="icon-circle"><svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg></div><span>Residential Households</span></div>
+  </div>
+  <div class="fade-up grid3">
+    <div class="card" style="text-align:center;"><div class="num" style="font-family:Georgia,serif;font-size:2.2rem;color:var(--gold);">85%</div><p>Rural Without Power</p></div>
+    <div class="card" style="text-align:center;"><div class="num" style="font-family:Georgia,serif;font-size:2.2rem;color:var(--gold);">40%</div><p>Harvest Lost to Spoilage</p></div>
+    <div class="card" style="text-align:center;"><div class="num" style="font-family:Georgia,serif;font-size:2.2rem;color:var(--gold);">6</div><p>Target Segments</p></div>
+  </div>
+</section>
+
+<!-- 6. BUSINESS MODEL -->
+<section id="model">
+  <div class="fade-up eyebrow">Business Model &amp; Revenue · 6/8</div>
+  <h2 class="fade-up title">Customers pay for power. Munken owns the infrastructure and the risk.</h2>
+  <div class="fade-up grid2" style="margin-top:36px;">
+    <div class="card">
+      <div class="two-col-head">
+        <div class="icon-circle"><svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M2 10h20"/></svg></div>
+        <h3>How Customers Pay</h3>
+      </div>
+      <div class="flow-item"><b>Outright purchase</b><p>Full payment upfront; customer owns the system immediately.</p></div>
+      <div class="flow-item"><b>Lease-to-own</b><p>Fixed monthly payments to Munken over 24–48 months.</p></div>
+      <div class="flow-item"><b>Pay-as-you-go</b><p>Mobile-money micro-payments tied to power actually used.</p></div>
+    </div>
+    <div class="card">
+      <div class="two-col-head">
+        <div class="icon-circle"><svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 15l4-6 3 3 5-8"/></svg></div>
+        <h3>How Munken Earns</h3>
+      </div>
+      <div class="flow-item"><b>Installation margin</b><p>Earned on every system sold, across all six segments.</p></div>
+      <div class="flow-item"><b>Financing payments</b><p>Interest built into lease-to-own and PAYG contracts.</p></div>
+      <div class="flow-item"><b>Service &amp; monitoring fees</b><p>Recurring monthly fees for uptime and maintenance.</p></div>
+    </div>
+  </div>
+  <div class="fade-up banner" style="margin-top:26px; text-align:left;">This seed round buys the first wave of hardware and installations — letting Munken front the cost of lease-to-own and pay-as-you-go plans for schools, clinics, agri-co-ops, hotels, SMEs and households.</div>
+</section>
+
+<!-- 7. USE OF FUNDS -->
+<section id="funds">
+  <div class="fade-up eyebrow">Use of Funds · 7/8</div>
+  <h2 class="fade-up title">Scaling decentralized solar across Kenya</h2>
+  <div class="fade-up bars" style="margin-top:38px;">
+    <div class="bar-row">
+      <div class="bar-label"><span>Hardware &amp; Installation</span><span>50%</span></div>
+      <div class="bar-track"><div class="bar-fill" data-w="50" style="background:var(--gold);"></div></div>
+    </div>
+    <div class="bar-row">
+      <div class="bar-label"><span>Training &amp; Maintenance</span><span>30%</span></div>
+      <div class="bar-track"><div class="bar-fill" data-w="30" style="background:var(--green);"></div></div>
+    </div>
+    <div class="bar-row">
+      <div class="bar-label"><span>Operations &amp; Monitoring</span><span>10%</span></div>
+      <div class="bar-track"><div class="bar-fill" data-w="10" style="background:#7C8FE0;"></div></div>
+    </div>
+    <div class="bar-row">
+      <div class="bar-label"><span>Contingency</span><span>10%</span></div>
+      <div class="bar-track"><div class="bar-fill" data-w="10" style="background:var(--muted);"></div></div>
+    </div>
+  </div>
+  <div class="fade-up impact-grid">
+    <div class="impact-card"><div class="num">~25</div><div class="lbl">Schools Powered</div></div>
+    <div class="impact-card"><div class="num">~15</div><div class="lbl">Health Clinics</div></div>
+    <div class="impact-card"><div class="num">~10</div><div class="lbl">Agri-Cooperatives</div></div>
+    <div class="impact-card"><div class="num">~50</div><div class="lbl">Households</div></div>
+  </div>
+</section>
+
+<!-- 8. CONTACT -->
+<section id="contact">
+  <div class="contact-wrap">
+    <div class="fade-up">
+      <div class="eyebrow">Get In Touch · 8/8</div>
+      <h2 class="title" style="font-size:clamp(2rem,4vw,3rem); margin-top:10px;">Let's Power Kenya Together</h2>
+      <p class="lede" style="margin-bottom:0;">Munken Energy — Decentralized Solar for Rural Kenya</p>
+    </div>
+    <div class="fade-up contact-card">
+      <div class="cinfo-row">
+        <div class="icon-circle"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg></div>
+        <div><div class="cinfo-label">Founder &amp; CEO</div><div class="cinfo-val">Kenneth Leonard</div></div>
+      </div>
+      <div class="cinfo-row">
+        <div class="icon-circle"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></div>
+        <div><div class="cinfo-label">Email</div><div class="cinfo-val"><a href="mailto:info@kentoursntravel.com">info@kentoursntravel.com</a><br><a href="mailto:kennethleonard2000@gmail.com">kennethleonard2000@gmail.com</a></div></div>
+      </div>
+      <div class="cinfo-row">
+        <div class="icon-circle"><svg viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3.1 19.5 19.5 0 01-6-6A19.8 19.8 0 012.1 4.2 2 2 0 014 2h3a2 2 0 012 1.7c.1.9.3 1.8.6 2.7a2 2 0 01-.4 2.1L8 9.9a16 16 0 006 6l1.5-1.2a2 2 0 012.1-.4c.9.3 1.8.5 2.7.6a2 2 0 011.7 2.1z"/></svg></div>
+        <div><div class="cinfo-label">Phone / WhatsApp</div><div class="cinfo-val">+254 110 946 978</div></div>
+      </div>
+      <div class="cinfo-row">
+        <div class="icon-circle"><svg viewBox="0 0 24 24"><path d="M12 21s7-6.5 7-12a7 7 0 10-14 0c0 5.5 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/></svg></div>
+        <div><div class="cinfo-label">Headquarters</div><div class="cinfo-val">Nairobi, Kenya</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>Munken Energy — Seed Round Deck · Web Edition</footer>
+
+<script>
+  const sections = document.querySelectorAll('section');
+  const navDots = document.getElementById('navDots');
+  sections.forEach((s,i)=>{
+    const b = document.createElement('button');
+    b.setAttribute('aria-label', 'Go to slide '+(i+1));
+    b.addEventListener('click', ()=> s.scrollIntoView({behavior:'smooth'}));
+    navDots.appendChild(b);
+  });
+  const dots = navDots.querySelectorAll('button');
+
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      const idx = [...sections].indexOf(e.target);
+      if(e.isIntersecting){
+        dots.forEach(d=>d.classList.remove('active'));
+        dots[idx].classList.add('active');
+        e.target.querySelectorAll('.fade-up').forEach(el=>el.classList.add('in'));
+        if(e.target.id === 'funds'){
+          e.target.querySelectorAll('.bar-fill').forEach(bar=>{
+            bar.style.width = bar.dataset.w + '%';
+          });
+        }
+      }
+    });
+  }, {threshold:0.4});
+  sections.forEach(s=>io.observe(s));
+</script>
+</body>
+</html>
